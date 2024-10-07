@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="/style/style.css">
+    <title>Joc del penjat</title>
+</head>
+<body>
+    <header>
+        <form>
+            <input id="paraulaEntrada" type="password" placeholder="Introdueix una paraula">
+            <a href="javascript:void(0)" onclick="veureContrasenya()"><span id="verIcon" class="material-symbols-outlined">visibility</span></a>
+        </form>
+        <button id="startBtn" onclick="comencarPartida()">Comencar partida</button>
+    </header>
+    <main>
+        <div id="paraulaContainer">
+            <span id="paraulaEstat">Començar partida</span>
+        </div>
+        <div id="infoContainer">
+            <div id="stats">
+                <h2>Jugador 1</h2>
+                <div>
+                    <span>PUNTS PARTIDA ACUAL</span><br>
+                    <span>0</span>
+                </div>
+                <div>
+                    <span>TOTAL PARTIDES</span><br>
+                    <span>0</span>
+                </div>
+                <div>
+                    <span>PARTIDES GUANYADES</span><br>
+                    <span>0</span>
+                </div>
+                <div>
+                    <span>PARTIDA AMB MES PUNTS:</span><br>
+                    <span>07/10/2024 15:45 - 10 punts</span>
+                </div>
+            </div>
+            <div id="ahorcadoContainer">
+                
+            </div>
+        </div>
+        <div id="lletresContainer"></div>
+    </main>
+    <script src="/script/afegirLletres.js"></script>
+    <script src="/script/penjat.js"></script>
+</body>
+</html>
