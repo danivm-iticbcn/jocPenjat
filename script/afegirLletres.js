@@ -8,8 +8,8 @@ for (i=65; i<=90; i++){
     lletraBoto.id = `Btn${lletra}`
     lletraBoto.textContent = `${lletra}`;
     lletraBoto.onclick = function(){
-        comprobarLletra(lletra);
-    }
+        jugarLletra(lletra);
+    };
     lletresContainer.appendChild(lletraBoto);
 }
 

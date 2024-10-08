@@ -6,26 +6,36 @@ const paraulaEstat = document.getElementById('paraulaEstat');
 
 //ELEMENTS LOGICA
 let jugadas = 0;
-
 let paraulaSecreta;
+let arrayParaulaSecreta;
+let arrayEncertades;
+let enJuego = false;
 
+//Evitem que el formulari refresqui la pagina i en cop d'aixo llenci comencarPartida
+document.getElementById('formularioHeader').addEventListener('submit', function(event) {
+    event.preventDefault();
+    comencarPartida();
+});
+
+
+////////FUNCIONS\\\\\\\\
 function comencarPartida(){
-
-    paraulaSecreta = entradaParaula.value;
+    paraulaSecreta = entradaParaula.value.toUpperCase();
 
     //VALIDACIONS
     if(paraulaSecreta){
         if(paraulaSecreta.length > 3){
-            let arrayParaulaSecreta = paraulaSecreta.split("");
-            let hayNumerosOEspais = hiHaNumerosOEspais(arrayParaulaSecreta)
-            if (hayNumerosOEspais){
-                alert("La paraula no pot tenir numeros ni espais.")
+            //Pasem la paraula a una llista
+            arrayParaulaSecreta = paraulaSecreta.split("");
+            //Comprobem si hi han numeros o esapis en blanc
+            if (hiHaNumerosOEspais(arrayParaulaSecreta)){
+                alert("La paraula no pot tenir numeros ni espais.");
             } else{
-                //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT I BOTO
-                entradaParaula.disabled = true;
-                comencar.disabled = true;
-                iniciarEstatParaula(arrayParaulaSecreta.length);
-                console.log(hayNumerosOEspais);
+                //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT, EL BOTO I COMENCEM PARTIDA
+                enJuego = true;
+                deshabilitarElementsHeader();
+                arrayEncertades = crearArrayLletresEncertades(arrayParaulaSecreta.length);
+                actualitzarEstatParaula();
                 console.log(arrayParaulaSecreta);
             }
         }else{
@@ -37,7 +47,6 @@ function comencarPartida(){
 }
 
 
-/////FUNCIONS\\\\\
 function veureContrasenya(){
     if(entradaParaula.type == "password"){
         entradaParaula.type = "text";
@@ -47,6 +56,7 @@ function veureContrasenya(){
         ullIcon.textContent = "visibility";
     } 
 }
+
 
 function hiHaNumerosOEspais(array){
     let hayNumerosOEspais = false;
@@ -58,22 +68,45 @@ function hiHaNumerosOEspais(array){
     return hayNumerosOEspais;
 }
 
-function iniciarEstatParaula(distancia){
+
+function deshabilitarElementsHeader(){
+    entradaParaula.disabled = true;
+    comencar.disabled = true;
+}
+
+
+function crearArrayLletresEncertades(distancia){
     let stringGuio = "";
     for (i=0; i<distancia; i++){
         stringGuio += "-";
     }
-    paraulaEstat.textContent = stringGuio;
+    return stringGuio.split("");
 }
 
 
-function comprobarLletra(lletra){
-    comprobarLletra(lletra);
-    console.log(lletra);
+function actualitzarEstatParaula(){
+    paraulaEstat.textContent = arrayEncertades.join("");
 }
+
+function jugarLletra(lletra){
+    if (enJuego){
+        comprobarLletra(lletra);
+    }else{
+        alert("Has de introduir una paraula avans.");
+    }
+    
+}
+
 
 function comprobarLletra(lletra){
     let botonLletra = document.getElementById(`Btn${lletra}`);
     botonLletra.disabled = true;
     botonLletra.style.color = "red";
+    //Mirem si la lletra es al array i la posem
+    for (i=0; i<arrayParaulaSecreta.length; i++){
+        if (lletra == arrayParaulaSecreta[i]){
+            arrayEncertades[i] = lletra;
+        }
+    }
+    actualitzarEstatParaula();
 }

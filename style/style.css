@@ -30,6 +30,12 @@ header > form{
     padding-top: 2.5px;
     text-decoration: none;
     color: black;
+    transition-duration: 0.5s;
+}
+
+#verIcon:hover{
+    background-color: rgba(185, 185, 185, 0.774);
+    border-radius: 12px;
 }
 
 #startBtn{
@@ -37,6 +43,11 @@ header > form{
     padding-block: 10px;
     padding-inline: 15px;
     border-radius: 8px;
+    transition-duration: 0.5s;
+}
+
+#startBtn:hover{
+    background-color: rgba(197, 250, 5, 0.488);
 }
 
 /**MAIN*/
@@ -56,6 +67,10 @@ main{
     border-radius: 8px;
     padding-block: 30px;
     
+}
+
+#paraulaEstat{
+    letter-spacing: 5px;
 }
 
 #infoContainer{
@@ -111,6 +126,11 @@ h2{
     padding-block: 6px;
     padding-inline: 9px;
     border: 1px solid rgba(255, 0, 0, 0.611);
-    background-color: rgba(255, 255, 0, 0.467);
+    background-color: rgba(255, 255, 0, 0.412);
     border-radius: 4px;
+    transition-duration: 0.4s;
+}
+
+.lletresBtn:hover:not(:disabled){
+    background-color: rgb(246, 255, 0);
 }
