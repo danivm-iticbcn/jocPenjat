@@ -11,7 +11,7 @@
     <header>
         <form id="formularioHeader">
             <input id="paraulaEntrada" type="password" placeholder="Introdueix una paraula">
-            <a href="javascript:void(0)" onclick="veureContrasenya()"><span id="verIcon" class="material-symbols-outlined">visibility</span></a>
+            <a href="javascript:void(0)" onclick="veureParaula()"><span id="verIcon" class="material-symbols-outlined">visibility</span></a>
         </form>
         <button id="startBtn" onclick="comencarPartida()">Comencar partida</button>
     </header>
@@ -24,22 +24,25 @@
                 <h2>Jugador 1</h2>
                 <div>
                     <span>PUNTS PARTIDA ACUAL</span><br>
-                    <span>0</span>
+                    <span id="punts">0</span>
                 </div>
                 <div>
                     <span>TOTAL PARTIDES</span><br>
-                    <span>0</span>
+                    <span id="partides">0</span>
                 </div>
                 <div>
                     <span>PARTIDES GUANYADES</span><br>
-                    <span>0</span>
+                    <span id="guanyades">0</span>
                 </div>
                 <div>
                     <span>PARTIDA AMB MES PUNTS:</span><br>
-                    <span>07/10/2024 15:45 - 10 punts</span>
+                    <span id="millorPartida">07/10/2024 15:45 - 0 punts</span>
                 </div>
             </div>
-            <div id="ahorcadoContainer"></div>
+            <div id="ahorcadoContainer">
+                <img id="imatge" src="">
+            </div>
+            <div></div>
         </div>
         <div id="lletresContainer"></div>
     </main>
