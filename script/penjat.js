@@ -4,11 +4,16 @@ const ullIcon = document.getElementById("verIcon");
 const comencar = document.getElementById("startBtn");
 const paraulaEstat = document.getElementById('paraulaEstat');
 const contenidorEstat = document.getElementById('paraulaContainer');
-const guanyandesStat = document.getElementById('guanyades');
-const partidesStat = document.getElementById('partides');
-const puntsStat = document.getElementById('punts');
-const millorPartidaEstat = document.getElementById('millorPartida');
+const guanyandesStat1 = document.getElementById('guanyades');
+const partidesStat1 = document.getElementById('partides');
+const puntsStat1 = document.getElementById('punts');
+const millorPartidaEstat1 = document.getElementById('millorPartida');
 const imatge = document.getElementById('imatge');
+//Multijugador
+const guanyandesStat2 = document.getElementById('guanyades');
+const partidesStat2 = document.getElementById('partides');
+const puntsStat2 = document.getElementById('punts');
+const millorPartidaEstat2 = document.getElementById('millorPartida');
 
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
@@ -23,6 +28,9 @@ let ratxa;
 let punts;
 let millorPuntuacioPartides = 0;
 let data;
+//LOGICA MULTIJUGADOR
+let puntsMulti = [0, 0];
+let torn = 1;
 
 //Evitem que el formulari refresqui la pagina i en cop d'aixo llenci comencarPartida
 document.getElementById('formularioHeader').addEventListener('submit', function(event) {
@@ -114,7 +122,7 @@ function crearArrayLletresEncertades(distancia){
 
 //Funcio per actulitzar la paraula a adivinar
 function actualitzarEstatParaula(){
-    paraulaEstat.textContent = arrayEncertades.join("");
+    paraulaEstat.textContent = arrayEncertades.toString().replaceAll(","," ");
 }
 
 //Funcio per actualitzar els estats de puntuacio
@@ -167,12 +175,13 @@ function comprobarLletra(lletra){
         jugadas++;
         imatge.src = `/img/penjat_${jugadas}.jpg`;
         ratxa = 0;
-        if (punts > 0){
-            punts--;
+        if (puntsMulti[torn] > 0){
+            puntsMulti[torn]--;
         }
+        cambiarTorn();
     }
     //Actualitzem estats puntuacio i paraula
-    punts += puntsJugada * ratxa;
+    puntsMulti[torn] += puntsJugada * ratxa;
     actualitzarEstatParaula();
     actualitzarEstatPartida()
     //Mirem si hem guanyat
@@ -221,3 +230,10 @@ function comprovarMillorPartida(){
         millorPartidaEstat.textContent = `${data} ${hora} - ${millorPuntuacioPartides} punts`;
     }
 }
+
+//MULTIJUGADOR
+
+function cambiarTorn(){
+    (torn == 1 ? torn=2:torn=1);
+}
+
