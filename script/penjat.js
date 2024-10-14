@@ -114,7 +114,7 @@ function crearArrayLletresEncertades(distancia){
 
 //Funcio per actulitzar la paraula a adivinar
 function actualitzarEstatParaula(){
-    paraulaEstat.textContent = arrayEncertades.join("");
+    paraulaEstat.textContent = arrayEncertades.toString().replaceAll(","," ");
 }
 
 //Funcio per actualitzar els estats de puntuacio
