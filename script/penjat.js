@@ -4,16 +4,18 @@ const ullIcon = document.getElementById("verIcon");
 const comencar = document.getElementById("startBtn");
 const paraulaEstat = document.getElementById('paraulaEstat');
 const contenidorEstat = document.getElementById('paraulaContainer');
-const guanyandesStat1 = document.getElementById('guanyades');
-const partidesStat1 = document.getElementById('partides');
-const puntsStat1 = document.getElementById('punts');
-const millorPartidaEstat1 = document.getElementById('millorPartida');
+const guanyandesStat0 = document.getElementById('guanyades');
+const partidesStat0 = document.getElementById('partides');
+const puntsStat0 = document.getElementById('punts');
+const millorPartidaEstat0 = document.getElementById('millorPartida');
 const imatge = document.getElementById('imatge');
 //Multijugador
-const guanyandesStat2 = document.getElementById('guanyades');
-const partidesStat2 = document.getElementById('partides');
-const puntsStat2 = document.getElementById('punts');
-const millorPartidaEstat2 = document.getElementById('millorPartida');
+const stats0 = document.getElementById('stats');
+const stats1 = document.getElementById('stats2');
+const guanyandesStat1 = document.getElementById('guanyades2');
+const partidesStat1 = document.getElementById('partides2');
+const puntsStat1 = document.getElementById('punts2');
+const millorPartidaEstat1 = document.getElementById('millorPartida2');
 
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
@@ -22,15 +24,18 @@ let paraulaSecreta;
 let arrayParaulaSecreta;
 let arrayEncertades;
 let enJuego = false;
-let partidasGuanyades = 0;
+//let partidasGuanyades = 0;
 let partidesJugades = 0;
-let ratxa;
-let punts;
-let millorPuntuacioPartides = 0;
+//let ratxa;
+//let punts;
+//let millorPuntuacioPartides = 0;
 let data;
 //LOGICA MULTIJUGADOR
-let puntsMulti = [0, 0];
-let torn = 1;
+let torn;
+let puntsMulti;
+let partidasGuanyades = [0, 0];
+let ratxa;
+let millorPuntuacioPartides = [0, 0];
 
 //Evitem que el formulari refresqui la pagina i en cop d'aixo llenci comencarPartida
 document.getElementById('formularioHeader').addEventListener('submit', function(event) {
@@ -54,8 +59,8 @@ function comencarPartida(){
             } else{
                 //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT, EL BOTO I COMENCEM PARTIDA
                 iniciarJoc();
+                console.log(torn)
                 imatge.src = `/img/penjat_${jugadas}.jpg`;
-                console.log(arrayParaulaSecreta);
             }
         }else{
             alert('La paraula ha de tenir mes de 3 lletres.');
@@ -68,10 +73,12 @@ function comencarPartida(){
 //Funcio per iniciar elements necesaris de la partida
 function iniciarJoc(){
     enJuego = true;
-    punts = 0;
-    ratxa = 0;
+    puntsMulti = [0, 0];
+    ratxa = [0, 0];
+    torn = 0;
+    stats0.style.backgroundColor = "green";
     reiniciarLletres();
-    contenidorEstat.style.backgroundColor = "rgba(110, 42, 237, 0.521)";
+    
     deshabilitarElementsHeader();
     arrayEncertades = crearArrayLletresEncertades(arrayParaulaSecreta.length);
     actualitzarEstatParaula();
@@ -127,9 +134,16 @@ function actualitzarEstatParaula(){
 
 //Funcio per actualitzar els estats de puntuacio
 function actualitzarEstatPartida(){
-    guanyandesStat.textContent = partidasGuanyades;
-    partidesStat.textContent = partidesJugades;
-    puntsStat.textContent = punts;
+    if (torn == 0){
+        guanyandesStat0.textContent = partidasGuanyades[torn];
+        puntsStat0.textContent = puntsMulti[torn];
+    } else{
+        guanyandesStat1.textContent = partidasGuanyades[torn];
+        puntsStat1.textContent = puntsMulti[torn];
+    }
+    partidesStat1.textContent = partidesJugades;
+    partidesStat0.textContent = partidesJugades;
+    
 }
 
 //Funcio per jugar una lletra
@@ -170,24 +184,26 @@ function comprobarLletra(lletra){
     }
     //Si acerta sumeme ratxa si no reiniciem i incrementem jugadas
     if(acertat){
-        ratxa += 1;
+        ratxa[torn] += 1;
     } else{
         jugadas++;
         imatge.src = `/img/penjat_${jugadas}.jpg`;
-        ratxa = 0;
+        ratxa[torn] = 0;
         if (puntsMulti[torn] > 0){
             puntsMulti[torn]--;
         }
-        cambiarTorn();
     }
     //Actualitzem estats puntuacio i paraula
-    puntsMulti[torn] += puntsJugada * ratxa;
+    puntsMulti[torn] += puntsJugada * ratxa[torn];
+    console.log(puntsMulti);
     actualitzarEstatParaula();
     actualitzarEstatPartida()
+    acertat ? '':cambiarTorn();
     //Mirem si hem guanyat
     if (comprovarGuanyar()){
         lancarGuanyar();
-    } 
+    }
+
 }
 
 //Funcio per a quan es perd el game
@@ -213,7 +229,7 @@ function comprovarGuanyar(){
 //Funcio per cambiar pantalla quan es guanya
 function lancarGuanyar(){
     partidesJugades++;
-    partidasGuanyades++;
+    partidasGuanyades[torn]++;
     contenidorEstat.style.backgroundColor = 'green';
     habilitarElementsHeader();
     actualitzarEstatPartida();
@@ -223,17 +239,30 @@ function lancarGuanyar(){
 
 //Funcio per veure si la partida es millor que l'anterior
 function comprovarMillorPartida(){
-    if (punts >millorPuntuacioPartides){
-        millorPuntuacioPartides = punts;
+    if (puntsMulti[torn] > millorPuntuacioPartides[torn]){
+        millorPuntuacioPartides[torn] = puntsMulti[torn];
         let data = new Date().toLocaleDateString('es-ES');
         let hora = new Date().toLocaleTimeString('es-ES');
-        millorPartidaEstat.textContent = `${data} ${hora} - ${millorPuntuacioPartides} punts`;
+        if(torn == 0){
+            millorPartidaEstat0.textContent = `${data} ${hora} - ${millorPuntuacioPartides[torn]} punts`;
+        }else{
+            millorPartidaEstat1.textContent = `${data} ${hora} - ${millorPuntuacioPartides[torn]} punts`;
+        }
+        
     }
 }
 
 //MULTIJUGADOR
-
 function cambiarTorn(){
-    (torn == 1 ? torn=2:torn=1);
+    if (torn == 0){
+        torn = 1;
+        stats1.style.backgroundColor = "green";
+        stats0.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
+    } else{
+        torn = 0;
+        stats0.style.backgroundColor = "green";
+        stats1.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
+    }
+    
 }
 
