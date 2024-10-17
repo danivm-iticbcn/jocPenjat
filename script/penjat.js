@@ -19,19 +19,17 @@ const millorPartidaEstat1 = document.getElementById('millorPartida2');
 
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
-let jugadas = 0;
+const MIDA_MIN_PARAULA = 3;
+let jugadas;
 let paraulaSecreta;
 let arrayParaulaSecreta;
 let arrayEncertades;
 let enJuego = false;
-//let partidasGuanyades = 0;
 let partidesJugades = 0;
-//let ratxa;
-//let punts;
-//let millorPuntuacioPartides = 0;
 let data;
+let hasGuanyat;
 //LOGICA MULTIJUGADOR
-let torn;
+let torn = 0;
 let puntsMulti;
 let partidasGuanyades = [0, 0];
 let ratxa;
@@ -47,38 +45,57 @@ document.getElementById('formularioHeader').addEventListener('submit', function(
 ////////FUNCIONS\\\\\\\\
 function comencarPartida(){
     paraulaSecreta = entradaParaula.value.toUpperCase();
-
     //VALIDACIONS
     if(paraulaSecreta){
-        if(paraulaSecreta.length > 3){
+        if(paraulaSecreta.length > MIDA_MIN_PARAULA){
             //Pasem la paraula a una llista
             arrayParaulaSecreta = paraulaSecreta.split("");
             //Comprobem si hi han numeros o esapis en blanc
             if (hiHaNumerosOEspais(arrayParaulaSecreta)){
-                alert("La paraula no pot tenir numeros ni espais.");
+                Swal.fire({
+                    icon: "error",
+                    title: "La paraula no pot tenir numeros ni espais",
+                  });
             } else{
                 //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT, EL BOTO I COMENCEM PARTIDA
                 iniciarJoc();
-                console.log(torn)
+                jugadas = 0;
                 imatge.src = `/img/penjat_${jugadas}.jpg`;
             }
         }else{
-            alert('La paraula ha de tenir mes de 3 lletres.');
+            Swal.fire({
+                icon: "error",
+                title: "La paraula ha de tenir mes de 3 lletres",
+              });
         }
     }else{
-        alert('No has introduit una paraula.');
+        Swal.fire({
+            icon: "error",
+            title: "No has introduit cap paraula",
+          });
     }
 }
 
 //Funcio per iniciar elements necesaris de la partida
 function iniciarJoc(){
+    //iniciar joc
     enJuego = true;
+    //Dades a 0
     puntsMulti = [0, 0];
     ratxa = [0, 0];
-    torn = 0;
-    stats0.style.backgroundColor = "green";
+    puntsStat0.textContent = 0;
+    puntsStat1.textContent = 0;
+    //Comenca el que guanya
+    if (torn == 0){
+        stats0.style.backgroundColor = "green";
+        stats1.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
+    } else{
+        stats1.style.backgroundColor = "green";
+        stats0.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
+    }
+    //Reiniciem elements
+    contenidorEstat.style.backgroundColor = "rgba(110, 42, 237, 0.521)";
     reiniciarLletres();
-    
     deshabilitarElementsHeader();
     arrayEncertades = crearArrayLletresEncertades(arrayParaulaSecreta.length);
     actualitzarEstatParaula();
@@ -134,16 +151,15 @@ function actualitzarEstatParaula(){
 
 //Funcio per actualitzar els estats de puntuacio
 function actualitzarEstatPartida(){
-    if (torn == 0){
-        guanyandesStat0.textContent = partidasGuanyades[torn];
-        puntsStat0.textContent = puntsMulti[torn];
-    } else{
-        guanyandesStat1.textContent = partidasGuanyades[torn];
-        puntsStat1.textContent = puntsMulti[torn];
+    if (hasGuanyat){
+        //Actualitzem partides jugades i guanyades
+        partidesStat1.textContent = partidesJugades;
+        partidesStat0.textContent = partidesJugades;
+        torn == 0 ? guanyandesStat0.textContent = partidasGuanyades[torn]:guanyandesStat1.textContent = partidasGuanyades[torn];
+    }else{
+        //Actualitzem puntuacio actual
+        torn == 0 ? puntsStat0.textContent = puntsMulti[torn]:puntsStat1.textContent = puntsMulti[torn]
     }
-    partidesStat1.textContent = partidesJugades;
-    partidesStat0.textContent = partidesJugades;
-    
 }
 
 //Funcio per jugar una lletra
@@ -152,7 +168,10 @@ function jugarLletra(lletra){
         if (enJuego){
             comprobarLletra(lletra);
         }else{
-            alert("Has de introduir una paraula avans.");
+            Swal.fire({
+                icon: "error",
+                title: "Has de introduir una paraula avans de jugar",
+              });
         }
     }else{
         lancarGameOver();
@@ -182,7 +201,7 @@ function comprobarLletra(lletra){
             acertat = true;
         }
     }
-    //Si acerta sumeme ratxa si no reiniciem i incrementem jugadas
+    //Si acerta sumem ratxa si no reiniciem i incrementem jugadas
     if(acertat){
         ratxa[torn] += 1;
     } else{
@@ -195,67 +214,73 @@ function comprobarLletra(lletra){
     }
     //Actualitzem estats puntuacio i paraula
     puntsMulti[torn] += puntsJugada * ratxa[torn];
-    console.log(puntsMulti);
     actualitzarEstatParaula();
     actualitzarEstatPartida()
     acertat ? '':cambiarTorn();
     //Mirem si hem guanyat
-    if (comprovarGuanyar()){
+    comprovarGuanyar()
+    if (hasGuanyat){
         lancarGuanyar();
     }
-
 }
 
 //Funcio per a quan es perd el game
 function lancarGameOver(){
-    partidesJugades++;
     contenidorEstat.style.backgroundColor = 'red';
     habilitarElementsHeader();
     actualitzarEstatPartida();
+    //Desactivem partida
     enJuego = false;
 }
 
 //Funcio per a veure si ja hem guanyat o no
 function comprovarGuanyar(){
-    let hasGuanyat = true;
+    hasGuanyat = true;
+    //Mirem si ja hem omplert tot l'array
     for (i=0; i<arrayEncertades.length && hasGuanyat; i++){
         if(arrayEncertades[i] == "-"){
             hasGuanyat = false;
         }
     }
-    return hasGuanyat;
 }
 
 //Funcio per cambiar pantalla quan es guanya
 function lancarGuanyar(){
+    //Busquema al guanyador
+    torn == puntuacioMajor() ? '':cambiarTorn();
+    //Actualitzem dades
     partidesJugades++;
     partidasGuanyades[torn]++;
     contenidorEstat.style.backgroundColor = 'green';
     habilitarElementsHeader();
     actualitzarEstatPartida();
     comprovarMillorPartida();
+    //Desactivem partida
     enJuego = false;
+    lancarSpaceCat();
 }
 
 //Funcio per veure si la partida es millor que l'anterior
 function comprovarMillorPartida(){
     if (puntsMulti[torn] > millorPuntuacioPartides[torn]){
         millorPuntuacioPartides[torn] = puntsMulti[torn];
+        //Agafem la data i hora actuals
         let data = new Date().toLocaleDateString('es-ES');
         let hora = new Date().toLocaleTimeString('es-ES');
+        //Segons el jugador asignem a un o un altre
         if(torn == 0){
             millorPartidaEstat0.textContent = `${data} ${hora} - ${millorPuntuacioPartides[torn]} punts`;
         }else{
             millorPartidaEstat1.textContent = `${data} ${hora} - ${millorPuntuacioPartides[torn]} punts`;
         }
-        
     }
 }
 
-//MULTIJUGADOR
+//Funcio per cambiar el torn del jugador
 function cambiarTorn(){
     if (torn == 0){
         torn = 1;
+        //També cambiem el estil per saber a que jugador li toca
         stats1.style.backgroundColor = "green";
         stats0.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
     } else{
@@ -266,3 +291,31 @@ function cambiarTorn(){
     
 }
 
+//Funcio per saber que te més puntuacio i qui guanya
+function puntuacioMajor(){
+    let ganador = 0;
+    let puntuacioMesGran = puntsMulti[0];
+    if (puntuacioMesGran < puntsMulti[1]){
+        puntuacioMesGran=puntsMulti[1];
+        ganador = 1;
+    } else if(puntuacioMesGran == puntsMulti[1]){
+        ganador = torn;
+    }
+    return ganador
+}
+
+function lancarSpaceCat(){
+    Swal.fire({
+        title: `Enhorabona jugador ${torn+1}, Has guanyat!`,
+        width: 500,
+        padding: "3em",
+        color: "black",
+        confirmButtonText: "Seguir jugant",
+        backdrop: `
+          rgba(0,0,123,0.4)
+          url("/gyf/space_cat.gif")
+          left top
+          no-repeat
+        `
+      });
+}
