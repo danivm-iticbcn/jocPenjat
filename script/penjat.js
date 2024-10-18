@@ -20,7 +20,7 @@ const millorPartidaEstat1 = document.getElementById('millorPartida2');
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
 const MIDA_MIN_PARAULA = 3;
-let jugadas;
+let jugadas = 0;
 let paraulaSecreta;
 let arrayParaulaSecreta;
 let arrayEncertades;
@@ -52,27 +52,17 @@ function comencarPartida(){
             arrayParaulaSecreta = paraulaSecreta.split("");
             //Comprobem si hi han numeros o esapis en blanc
             if (hiHaNumerosOEspais(arrayParaulaSecreta)){
-                Swal.fire({
-                    icon: "error",
-                    title: "La paraula no pot tenir numeros ni espais",
-                  });
+                lancarErrorToastr("La paraula no pot contenir numeros ni espais");
             } else{
                 //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT, EL BOTO I COMENCEM PARTIDA
                 iniciarJoc();
-                jugadas = 0;
-                imatge.src = `/img/penjat_${jugadas}.jpg`;
             }
         }else{
-            Swal.fire({
-                icon: "error",
-                title: "La paraula ha de tenir mes de 3 lletres",
-              });
+            lancarErrorToastr("La paraula ha de tenir mes de 3 lletres");
         }
     }else{
-        Swal.fire({
-            icon: "error",
-            title: "No has introduit cap paraula",
-          });
+        lancarErrorToastr("Has de introduir una paraula");
+        
     }
 }
 
@@ -83,6 +73,7 @@ function iniciarJoc(){
     //Dades a 0
     puntsMulti = [0, 0];
     ratxa = [0, 0];
+    jugadas = 0;
     puntsStat0.textContent = 0;
     puntsStat1.textContent = 0;
     //Comenca el que guanya
@@ -94,6 +85,7 @@ function iniciarJoc(){
         stats0.style.backgroundColor = "rgba(227, 46, 46, 0.647)";
     }
     //Reiniciem elements
+    imatge.src = `/img/penjat_${jugadas}.jpg`;
     contenidorEstat.style.backgroundColor = "rgba(110, 42, 237, 0.521)";
     reiniciarLletres();
     deshabilitarElementsHeader();
@@ -168,10 +160,7 @@ function jugarLletra(lletra){
         if (enJuego){
             comprobarLletra(lletra);
         }else{
-            Swal.fire({
-                icon: "error",
-                title: "Has de introduir una paraula avans de jugar",
-              });
+            lancarErrorToastr("Has de introduir una paraula avans de jugar");
         }
     }else{
         lancarGameOver();
@@ -302,20 +291,4 @@ function puntuacioMajor(){
         ganador = torn;
     }
     return ganador
-}
-
-function lancarSpaceCat(){
-    Swal.fire({
-        title: `Enhorabona jugador ${torn+1}, Has guanyat!`,
-        width: 500,
-        padding: "3em",
-        color: "black",
-        confirmButtonText: "Seguir jugant",
-        backdrop: `
-          rgba(0,0,123,0.4)
-          url("/gyf/space_cat.gif")
-          left top
-          no-repeat
-        `
-      });
 }
