@@ -1,5 +1,4 @@
 const lletresContainer = document.getElementById('lletresContainer');
-const posicionEnye = 14;
 
 //Afegir totes les lletres per jugar
 for (i=65; i<=90; i++){
