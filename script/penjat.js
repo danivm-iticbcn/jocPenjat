@@ -50,7 +50,7 @@ function comencarPartida(){
         if(paraulaSecreta.length > MIDA_MIN_PARAULA){
             //Pasem la paraula a una llista
             arrayParaulaSecreta = paraulaSecreta.split("");
-            //Comprobem si hi han numeros o esapis en blanc
+            //Comprobem si hi han caracter que no siguin del alfabet
             if (comprovarParaula(paraulaSecreta)){
                 lancarErrorToastr("La paraula tansols pot tenir caracters del alfabet (a-z)");
             } else{
