@@ -105,17 +105,6 @@ function veureParaula(){
     } 
 }
 
-//Funcio per veure si la paraula conté numeros o espais
-function hiHaNumerosOEspais(array){
-    let hayNumerosOEspais = false;
-    for(i=0; i<array.length && !hayNumerosOEspais; i++){
-        if(!isNaN(array[i]) || array[i] == " "){
-            hayNumerosOEspais = true;
-        }
-    }
-    return hayNumerosOEspais;
-}
-
 //Funcio deshablitar
 function deshabilitarElementsHeader(){
     entradaParaula.disabled = true;
