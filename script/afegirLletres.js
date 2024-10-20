@@ -12,3 +12,21 @@ for (i=65; i<=90; i++){
     };
     lletresContainer.appendChild(lletraBoto);
 }
+
+
+
+function comprovarParaula(paraula){
+    let noEsValida = false;
+    for (i=0; i<paraula.length && !noEsValida; i++){
+        let lletra = paraula[i];
+        for (j=65; j<=90; j++){
+            if(lletra == String.fromCharCode(j)){
+                noEsValida = false;
+                break;
+            } else{
+                noEsValida = true;
+            }
+        }
+    }
+    return noEsValida;
+}

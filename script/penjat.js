@@ -51,8 +51,8 @@ function comencarPartida(){
             //Pasem la paraula a una llista
             arrayParaulaSecreta = paraulaSecreta.split("");
             //Comprobem si hi han numeros o esapis en blanc
-            if (hiHaNumerosOEspais(arrayParaulaSecreta)){
-                lancarErrorToastr("La paraula no pot contenir numeros ni espais");
+            if (comprovarParaula(paraulaSecreta)){
+                lancarErrorToastr("La paraula tansols pot tenir caracters del alfabet (a-z)");
             } else{
                 //UNA VEGADA SUPERAT TOTES LES VALIDACIONS DESHABILITEM EL INPUT, EL BOTO I COMENCEM PARTIDA
                 iniciarJoc();
@@ -76,6 +76,7 @@ function iniciarJoc(){
     jugadas = 0;
     puntsStat0.textContent = 0;
     puntsStat1.textContent = 0;
+    hasGuanyat = false;
     //Comenca el que guanya
     if (torn == 0){
         stats0.style.backgroundColor = "green";
