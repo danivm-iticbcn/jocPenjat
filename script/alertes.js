@@ -1,8 +1,14 @@
 //Pop up Sweet Alert
 function lancarSpaceCat(){
+    let titol = `Enhorabona jugador ${torn+1}, Has guanyat!`;
+    let url = 'url("/gif/space_cat.gif")';
+    if (!hasGuanyat){
+        titol = senseTemps ? `El jugador ${torn+1} s'ha quedat sense temps`:`No heu pugut endevinar la parula`;
+        url = 'url("/gif/lose.gif")';
+    }
     Swal.fire({
         //Parametres generals
-        title: `Enhorabona jugador ${torn+1}, Has guanyat!`,
+        title: titol,
         showDenyButton: true,
         width: 500,
         padding: "3em",
@@ -12,7 +18,7 @@ function lancarSpaceCat(){
         //gif
         backdrop: `
           rgba(0,0,123,0.4)
-          url("/gyf/space_cat.gif")
+          ${url}
           left top
           no-repeat`,
           //boto nova partida

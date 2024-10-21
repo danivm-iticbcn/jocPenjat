@@ -20,6 +20,7 @@ const millorPartidaEstat1 = document.getElementById('millorPartida2');
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
 const MIDA_MIN_PARAULA = 3;
+const MAX_TEMPS = 60;
 let jugadas = 0;
 let paraulaSecreta;
 let arrayParaulaSecreta;
@@ -34,6 +35,10 @@ let puntsMulti;
 let partidasGuanyades = [0, 0];
 let ratxa;
 let millorPuntuacioPartides = [0, 0];
+//Temps
+let temps = [MAX_TEMPS, MAX_TEMPS];
+let senseTemps = false;
+
 
 //Evitem que el formulari refresqui la pagina i en cop d'aixo llenci comencarPartida
 document.getElementById('formularioHeader').addEventListener('submit', function(event) {
@@ -92,6 +97,8 @@ function iniciarJoc(){
     deshabilitarElementsHeader();
     arrayEncertades = crearArrayLletresEncertades(arrayParaulaSecreta.length);
     actualitzarEstatParaula();
+    iniciarTiempo();
+    reiniciarTemps();
 }
 
 //Funcio per veure o deixar de veure la paraula
@@ -205,11 +212,13 @@ function comprobarLletra(lletra){
 
 //Funcio per a quan es perd el game
 function lancarGameOver(){
+    torn = -1;
     contenidorEstat.style.backgroundColor = 'red';
     habilitarElementsHeader();
     actualitzarEstatPartida();
     //Desactivem partida
     enJuego = false;
+    lancarSpaceCat();
 }
 
 //Funcio per a veure si ja hem guanyat o no
@@ -281,4 +290,34 @@ function puntuacioMajor(){
         ganador = torn;
     }
     return ganador
+}
+
+//Funcio per retornar els elements del temps al inici
+function reiniciarTemps(){
+    temps = [MAX_TEMPS, MAX_TEMPS];
+    document.getElementById('temps0').textContent = temps[torn] + 's';
+    document.getElementById('temps1').textContent = temps[torn] + 's';
+}
+
+function iniciarTiempo(){
+    const intervalo = setInterval(() => {
+        //Netejem l'interval
+        if(!enJuego){
+            clearInterval(intervalo);
+        }
+        //Canviem temps
+        if(torn == 0 && enJuego){
+            temps[torn]--;
+            document.getElementById('temps0').textContent = temps[torn] + 's';
+        } else if (torn == 1  && enJuego){
+            temps[torn]--;
+            document.getElementById('temps1').textContent = temps[torn] + 's';
+        }
+        //Comprovem si s'ha esgotat el temps
+        if (temps[torn] == 0) {
+            senseTemps = true;
+            lancarSpaceCat();
+        }
+        //ms
+    }, 1000);
 }
