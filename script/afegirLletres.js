@@ -1,9 +1,13 @@
 const lletresContainer = document.getElementById('lletresContainer');
 
+let alfabet = [];
+
 //Afegir totes les lletres per jugar
 for (i=65; i<=90; i++){
     //Agafem lletra del alfabet
     let lletra = String.fromCharCode(i);
+    //Afegim lletra al alfabet
+    alfabet.push(lletra);
     //Creem un element boto amb clase i funcio, despres ho afegim
     let lletraBoto = document.createElement('button');
     lletraBoto.className = 'lletresBtn';
@@ -23,8 +27,8 @@ function comprovarParaula(paraula){
     for (i=0; i<paraula.length && !noEsValida; i++){
         let lletra = paraula[i];
         //Comprovem si es qualsevol lletra del alfabet
-        for (j=65; j<=90; j++){
-            if(lletra == String.fromCharCode(j)){
+        for (j=0; j<alfabet.length; j++){
+            if(lletra == alfabet[j]){
                 noEsValida = false;
                 break;
             } else{
