@@ -9,6 +9,7 @@ const partidesStat0 = document.getElementById('partides');
 const puntsStat0 = document.getElementById('punts');
 const millorPartidaEstat0 = document.getElementById('millorPartida');
 const imatge = document.getElementById('imatge');
+const percentatge = document.getElementById('percentatge');
 //Multijugador
 const stats0 = document.getElementById('stats');
 const stats1 = document.getElementById('stats2');
@@ -16,6 +17,7 @@ const guanyandesStat1 = document.getElementById('guanyades2');
 const partidesStat1 = document.getElementById('partides2');
 const puntsStat1 = document.getElementById('punts2');
 const millorPartidaEstat1 = document.getElementById('millorPartida2');
+const percentatge2 = document.getElementById('percentatge2');
 
 //ELEMENTS LOGICA
 const MAX_JUGADAS = 10;
@@ -145,6 +147,8 @@ function actualitzarEstatPartida(){
         partidesStat1.textContent = partidesJugades;
         partidesStat0.textContent = partidesJugades;
         torn == 0 ? guanyandesStat0.textContent = partidasGuanyades[torn]:guanyandesStat1.textContent = partidasGuanyades[torn];
+        percentatge.textContent = ` (${(partidasGuanyades[0] / partidesJugades * 100).toFixed(2)}%)`;
+        percentatge2.textContent = ` (${(partidasGuanyades[1] / partidesJugades * 100).toFixed(2)}%)`;
     }else{
         //Actualitzem puntuacio actual
         torn == 0 ? puntsStat0.textContent = puntsMulti[torn]:puntsStat1.textContent = puntsMulti[torn]
