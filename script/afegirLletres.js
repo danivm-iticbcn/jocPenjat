@@ -1,22 +1,35 @@
-const lletresContainer = document.getElementById('lletresContainer');
+const lletresContainer = document.querySelector('#lletresContainer');
+const paraulaCombo = document.getElementById("paraulaEntrada");
 
 let alfabet = [];
 
-//Afegir totes les lletres per jugar
-for (i=65; i<=90; i++){
-    //Agafem lletra del alfabet
-    let lletra = String.fromCharCode(i);
-    //Afegim lletra al alfabet
-    alfabet.push(lletra);
-    //Creem un element boto amb clase i funcio, despres ho afegim
-    let lletraBoto = document.createElement('button');
-    lletraBoto.className = 'lletresBtn';
-    lletraBoto.id = `Btn${lletra}`;
-    lletraBoto.textContent = `${lletra}`;
-    lletraBoto.onclick = function(){
-        jugarLletra(lletra);
-    };
-    lletresContainer.appendChild(lletraBoto);
+fetch("http://127.0.0.1:5500/json/alfabet.json")
+    .then(resposta => resposta.json())
+    .then(function (resposta){
+        cargarLletres(resposta["alfabet"]);
+    })
+    .catch( function (Error) {
+        console.log("Error: " + Error);
+    });
+
+function cargarLletres(arrayAlfabet){
+    
+    alfabet = arrayAlfabet;
+
+    //Afegir totes les lletres per jugar
+    for (i=0; i<alfabet.length; i++){
+        //Agafem lletra del alfabet
+        let lletra = alfabet[i];
+        //Creem un element boto amb clase i funcio, despres ho afegim
+        let lletraBoto = document.createElement('button');
+        lletraBoto.className = 'lletresBtn';
+        lletraBoto.id = `Btn${lletra}`;
+        lletraBoto.textContent = `${lletra}`;
+        lletraBoto.addEventListener('click',  ()=> {
+            jugarLletra(lletra);
+        });
+        lletresContainer.appendChild(lletraBoto);
+    }
 }
 
 
@@ -37,4 +50,19 @@ function comprovarParaula(paraula){
         }
     }
     return noEsValida;
+}
+
+
+fetch("http://127.0.0.1:8000/penjat/tematica/opcions")
+    .then(resposta => resposta.json())
+    .then(function (resposta){
+        afegirTematiques(resposta);
+    })
+
+function afegirTematiques(tematiques){
+    tematiques.forEach(element => {
+        let option = document.createElement("option");
+        option.textContent = element["tema"];
+        paraulaCombo.appendChild(option);
+    })
 }
